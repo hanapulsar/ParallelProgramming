@@ -1,12 +1,13 @@
 #include <random>
 #include <fstream>
 #include <chrono>
+//#include <iomanip>
 #include "Matrix.h"
 
 using namespace std;
 
 //Generate random square matrix
-Matrix<double> random_matrix(size_t n) {
+static Matrix<double> random_matrix(size_t n) {
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<double> dist(-10.0, 10.0);
@@ -21,7 +22,7 @@ Matrix<double> random_matrix(size_t n) {
 }
 
 //Read matrix from file
-Matrix<double> read_matrix(const string& filepath) {
+static Matrix<double> read_matrix(const string& filepath) {
     ifstream input(filepath);
     if (!input.is_open()) {
         throw runtime_error("Can't open: " + filepath);
@@ -38,12 +39,16 @@ Matrix<double> read_matrix(const string& filepath) {
 }
 
 //Write matrix from file
-void write_matrix(const string& filepath, const Matrix<double>& matrix) {
+static void write_matrix(const string& filepath, const Matrix<double>& matrix) {
     ofstream output(filepath);
     if (!output.is_open()) {
         throw runtime_error("Can't open: " + filepath);
     }
     output << matrix.get_size() << "\n";
+
+    //Need this if not using rounding in .py for comparison
+    //output << std::setprecision(17) << matrix;
+
     output << matrix;
 }
 
@@ -62,7 +67,7 @@ int main(int argc, char* argv[]) {
             B = read_matrix(fileB);
         }
         else {
-            size_t size = 1000;
+            size_t size = 100;
             cout << "Generating random matrices. Size: " << size << "x" << size << "\n";
 
             string fileA = "InputA.txt";
