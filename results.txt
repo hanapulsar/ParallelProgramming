@@ -1,0 +1,139 @@
+Generating random matrices. Size: 200x200
+
+Size: 200
+Threads: 1
+Elapsed time: 0.0682767
+Accelaration: 1
+Efficiency: 1
+Size: 200
+Threads: 2
+Elapsed time: 0.0344305
+Accelaration: 1.98303
+Efficiency: 0.991515
+Size: 200
+Threads: 4
+Elapsed time: 0.0204354
+Accelaration: 3.3411
+Efficiency: 0.835275
+Size: 200
+Threads: 8
+Elapsed time: 0.0200352
+Accelaration: 3.40784
+Efficiency: 0.42598
+
+Generating random matrices. Size: 400x400
+
+Size: 400
+Threads: 1
+Elapsed time: 0.613447
+Accelaration: 1
+Efficiency: 1
+Size: 400
+Threads: 2
+Elapsed time: 0.302604
+Accelaration: 2.02723
+Efficiency: 1.01361
+Size: 400
+Threads: 4
+Elapsed time: 0.173598
+Accelaration: 3.53372
+Efficiency: 0.883431
+Size: 400
+Threads: 8
+Elapsed time: 0.145986
+Accelaration: 4.2021
+Efficiency: 0.525263
+
+Generating random matrices. Size: 800x800
+
+Size: 800
+Threads: 1
+Elapsed time: 5.47876
+Accelaration: 1
+Efficiency: 1
+Size: 800
+Threads: 2
+Elapsed time: 2.74701
+Accelaration: 1.99444
+Efficiency: 0.997221
+Size: 800
+Threads: 4
+Elapsed time: 1.46005
+Accelaration: 3.75244
+Efficiency: 0.93811
+Size: 800
+Threads: 8
+Elapsed time: 1.31014
+Accelaration: 4.18182
+Efficiency: 0.522727
+
+Generating random matrices. Size: 1200x1200
+
+Size: 1200
+Threads: 1
+Elapsed time: 23.9155
+Accelaration: 1
+Efficiency: 1
+Size: 1200
+Threads: 2
+Elapsed time: 11.8694
+Accelaration: 2.01489
+Efficiency: 1.00745
+Size: 1200
+Threads: 4
+Elapsed time: 7.07051
+Accelaration: 3.38242
+Efficiency: 0.845606
+Saving sample for verifing, size: 1200*1200 for 4 threads.
+Size: 1200
+Threads: 8
+Elapsed time: 5.20968
+Accelaration: 4.59058
+Efficiency: 0.573823
+
+Generating random matrices. Size: 1600x1600
+
+Size: 1600
+Threads: 1
+Elapsed time: 66.0844
+Accelaration: 1
+Efficiency: 1
+Size: 1600
+Threads: 2
+Elapsed time: 32.3508
+Accelaration: 2.04275
+Efficiency: 1.02137
+Size: 1600
+Threads: 4
+Elapsed time: 18.1579
+Accelaration: 3.63943
+Efficiency: 0.909858
+Size: 1600
+Threads: 8
+Elapsed time: 14.7072
+Accelaration: 4.49335
+Efficiency: 0.561669
+
+Generating random matrices. Size: 2000x2000
+
+Size: 2000
+Threads: 1
+Elapsed time: 128.198
+Accelaration: 1
+Efficiency: 1
+Size: 2000
+Threads: 2
+Elapsed time: 63.4532
+Accelaration: 2.02035
+Efficiency: 1.01017
+Size: 2000
+Threads: 4
+Elapsed time: 38.3752
+Accelaration: 3.34063
+Efficiency: 0.835158
+Size: 2000
+Threads: 8
+Elapsed time: 28.6591
+Accelaration: 4.47319
+Efficiency: 0.559149
+Finished.
