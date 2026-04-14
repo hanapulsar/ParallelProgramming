@@ -142,7 +142,7 @@ Matrix<T> Matrix<T>::multiply_omp(const Matrix& src, int num_threads) const {
 	// error C3016: 'i': index variable in OpenMP 'for' statement must have signed integral type
 	int n = static_cast<int>(size);
 
-#pragma omp parallel for
+	#pragma omp parallel for
 	for (int i = 0; i < n; ++i) {
 		for (size_t j = 0; j < size; ++j) {
 			T sum = 0;
