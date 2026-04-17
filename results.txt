@@ -1,0 +1,72 @@
+Generating random matrices. Size: 200x200
+Multiplied! Size: 200 Processes: 1 Time: 0.0651579s
+
+Generating random matrices. Size: 400x400
+Multiplied! Size: 400 Processes: 1 Time: 0.520008s
+
+Generating random matrices. Size: 800x800
+Multiplied! Size: 800 Processes: 1 Time: 4.7761s
+
+Generating random matrices. Size: 1200x1200
+Multiplied! Size: 1200 Processes: 1 Time: 21.2623s
+
+Generating random matrices. Size: 1600x1600
+Multiplied! Size: 1600 Processes: 1 Time: 58.8805s
+
+Generating random matrices. Size: 2000x2000
+Multiplied! Size: 2000 Processes: 1 Time: 116.137s
+
+Generating random matrices. Size: 200x200
+Multiplied! Size: 200 Processes: 2 Time: 0.033025s
+
+Generating random matrices. Size: 400x400
+Multiplied! Size: 400 Processes: 2 Time: 0.261191s
+
+Generating random matrices. Size: 800x800
+Multiplied! Size: 800 Processes: 2 Time: 2.9614s
+
+Generating random matrices. Size: 1200x1200
+Multiplied! Size: 1200 Processes: 2 Time: 10.755s
+
+Generating random matrices. Size: 1600x1600
+Multiplied! Size: 1600 Processes: 2 Time: 30.876s
+
+Generating random matrices. Size: 2000x2000
+Multiplied! Size: 2000 Processes: 2 Time: 57.8773s
+
+Generating random matrices. Size: 200x200
+Multiplied! Size: 200 Processes: 4 Time: 0.0171296s
+
+Generating random matrices. Size: 400x400
+Multiplied! Size: 400 Processes: 4 Time: 0.139202s
+
+Generating random matrices. Size: 800x800
+Multiplied! Size: 800 Processes: 4 Time: 1.88689s
+
+Generating random matrices. Size: 1200x1200
+Multiplied! Size: 1200 Processes: 4 Time: 6.51122s
+Saving sample for verifing, size: 1200*1200 for 4 processes.
+
+Generating random matrices. Size: 1600x1600
+Multiplied! Size: 1600 Processes: 4 Time: 17.0508s
+
+Generating random matrices. Size: 2000x2000
+Multiplied! Size: 2000 Processes: 4 Time: 34.9481s
+
+Generating random matrices. Size: 200x200
+Multiplied! Size: 200 Processes: 8 Time: 0.0161391s
+
+Generating random matrices. Size: 400x400
+Multiplied! Size: 400 Processes: 8 Time: 0.166336s
+
+Generating random matrices. Size: 800x800
+Multiplied! Size: 800 Processes: 8 Time: 1.63158s
+
+Generating random matrices. Size: 1200x1200
+Multiplied! Size: 1200 Processes: 8 Time: 5.60048s
+
+Generating random matrices. Size: 1600x1600
+Multiplied! Size: 1600 Processes: 8 Time: 15.137s
+
+Generating random matrices. Size: 2000x2000
+Multiplied! Size: 2000 Processes: 8 Time: 30.0367s

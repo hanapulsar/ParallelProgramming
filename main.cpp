@@ -135,7 +135,7 @@ int main(int argc, char** argv) {
             //Display results
             if (rank == 0) {
                 double elapsed_sec = end_time - start_time;
-                cout << "Multiplied! Size: " << size << " Procs: " << num_procs << " Time: " << elapsed_sec << "s" << endl;
+                cout << "Multiplied! Size: " << size << " Processes: " << num_procs << " Time: " << elapsed_sec << "s" << endl;
                 
                 if (size == 1200 && num_procs == 4) {
                     cout << "Saving sample for verifing, size: 1200*1200 for 4 processes." << endl;
