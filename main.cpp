@@ -1,6 +1,7 @@
 #include <random>
 #include <fstream>
 #include <chrono>
+#include <mpi.h>
 //#include <iomanip>
 #include "Matrix.h"
 
@@ -54,58 +55,97 @@ static void write_matrix(const string& filepath, const Matrix<double>& matrix) {
     output << matrix;
 }
 
-int main() {
+int main(int argc, char** argv) {
+    MPI_Init(&argc, &argv);
+
+    int rank, num_procs;
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
+
     vector<int> sizes = { 200, 400, 800, 1200, 1600, 2000 };
-    vector<int> threads = { 1, 2, 4, 8 };
 
     try {
-        Matrix<double> A, B, C;
-
         for (int size : sizes) {
-            cout << "\nGenerating random matrices. Size: " << size << "x" << size << "\n\n";
-            A = random_matrix(size);
-            B = random_matrix(size);
+            Matrix<double> A, B, C;
 
-            double time_1_thread = 0.0;
+            if (rank == 0) {
+                //Generate matrices only once
+                cout << "\nGenerating random matrices. Size: " << size << "x" << size << endl;
+                A = random_matrix(size);
+                B = random_matrix(size);
+                C = Matrix<double>(size);
+            }
+            else {
+                //Allocate memory for B matrix
+                B = Matrix<double>(size);
+            }
 
-            for (int t : threads) {
-                auto start = chrono::high_resolution_clock::now();
-                //TODO MPI
-                //C = A.multiply_omp(B, t);
-                auto end = chrono::high_resolution_clock::now();
+            //Broadcast B matrix
+            MPI_Bcast(B.get_data(), size * size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
-                double elapsed_sec = chrono::duration<double>(end - start).count();
+            //Allocate memory for local A and C matrices
+            int rows_for_proc = size / num_procs;
+            int local_matrix_size = rows_for_proc * size;
+            vector<double> local_A(local_matrix_size);
+            vector<double> local_C(local_matrix_size);
 
-                double acceleration = 1.0;
-                if (t == 1) {
-                    time_1_thread = elapsed_sec;
+            //Scatter A matrix
+            double* send_ptr_A = nullptr;
+            if (rank == 0) {
+                send_ptr_A = A.get_data();
+            }
+            MPI_Scatter(send_ptr_A, local_matrix_size, MPI_DOUBLE, //From
+                local_A.data(), local_matrix_size, MPI_DOUBLE, //To
+                0, MPI_COMM_WORLD);
+
+            //Sync
+            MPI_Barrier(MPI_COMM_WORLD);
+            double start_time = MPI_Wtime();
+
+            //Multiple local matrices
+            for (int i = 0; i < rows_for_proc; ++i) {
+                for (size_t j = 0; j < size; ++j) {
+                    double sum = 0.0;
+                    for (size_t k = 0; k < size; ++k) {
+                        sum += local_A[i * size + k] * B(k, j);
+                    }
+                    local_C[i * size + j] = sum;
                 }
-                else {
-                    acceleration = time_1_thread / elapsed_sec;
-                }
+            }
 
-                double efficiency = acceleration / t;
+            //Sync
+            MPI_Barrier(MPI_COMM_WORLD);
+            double end_time = MPI_Wtime();
 
-                cout << "Size: " << size << "\n";
-                cout << "Threads: " << t << "\n";
-                cout << "Elapsed time: " << elapsed_sec << "\n";
-                cout << "Accelaration: " << acceleration << "\n";
-                cout << "Efficiency: " << efficiency << "\n";
+            //Gather C matrix
+            double* recv_ptr_C = nullptr;
+            if (rank == 0) {
+                recv_ptr_C = C.get_data();
+            }
+            MPI_Gather(local_C.data(), local_matrix_size, MPI_DOUBLE,
+                recv_ptr_C, local_matrix_size, MPI_DOUBLE,
+                0, MPI_COMM_WORLD);
 
-                if (size == 1200 && t == 4) {
-                    cout << "Saving sample for verifing, size: 1200*1200 for 4 threads.\n";
+            //Display results
+            if (rank == 0) {
+                double elapsed_sec = end_time - start_time;
+                cout << "Size: " << size << " Procs: " << num_procs << " Time: " << elapsed_sec << " s" << endl;
+                
+                if (size == 1200 && num_procs == 2) {
+                    cout << "Saving sample for verifing, size: 1200*1200 for 4 processes." << endl;
                     write_matrix("InputA.txt", A);
                     write_matrix("InputB.txt", B);
                     write_matrix("Output.txt", C);
                 }
             }
         }
-        cout << "Finished.\n";
+        if (rank == 0) cout << "Finished." << endl;
     }
     catch (const exception& e) {
-        cerr << "Error: " << e.what() << "\n";
-        return -1;
+        cerr << "Error: " << e.what() << endl;
+        MPI_Abort(MPI_COMM_WORLD, 1);
     }
 
+    MPI_Finalize();
     return 0;
 }
