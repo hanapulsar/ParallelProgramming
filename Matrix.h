@@ -3,7 +3,6 @@
 
 #include <iostream>
 #include <stdexcept>
-#include <omp.h>
 
 template <typename T>
 class Matrix {
@@ -22,9 +21,11 @@ public:
 	const T& operator()(size_t row, size_t column) const;
 
 	Matrix operator*(const Matrix& src) const;
-	Matrix multiply_omp(const Matrix& src, int num_threads) const;
 
 	size_t get_size() const;
+
+	T* get_data() { return data; }
+	const T* get_data() const { return data; }
 };
 
 //Default constructor
@@ -116,34 +117,6 @@ Matrix<T> Matrix<T>::operator*(const Matrix& src) const {
 	Matrix<T> result(size);
 
 	for (size_t i = 0; i < size; ++i) {
-		for (size_t j = 0; j < size; ++j) {
-			T sum = 0;
-			for (size_t k = 0; k < size; ++k) {
-				sum += (*this)(i, k) * src(k, j);
-			}
-			result(i, j) = sum;
-		}
-	}
-
-	return result;
-}
-
-//Parallel multiplication
-template <typename T>
-Matrix<T> Matrix<T>::multiply_omp(const Matrix& src, int num_threads) const {
-	if (size != src.size) {
-		throw std::invalid_argument("Matrix dimensions different.");
-	}
-
-	Matrix<T> result(size);
-
-	omp_set_num_threads(num_threads);
-
-	// error C3016: 'i': index variable in OpenMP 'for' statement must have signed integral type
-	int n = static_cast<int>(size);
-
-	#pragma omp parallel for
-	for (int i = 0; i < n; ++i) {
 		for (size_t j = 0; j < size; ++j) {
 			T sum = 0;
 			for (size_t k = 0; k < size; ++k) {

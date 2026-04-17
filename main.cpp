@@ -70,7 +70,8 @@ int main() {
 
             for (int t : threads) {
                 auto start = chrono::high_resolution_clock::now();
-                C = A.multiply_omp(B, t);
+                //TODO MPI
+                //C = A.multiply_omp(B, t);
                 auto end = chrono::high_resolution_clock::now();
 
                 double elapsed_sec = chrono::duration<double>(end - start).count();
