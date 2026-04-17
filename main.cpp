@@ -66,6 +66,12 @@ int main(int argc, char** argv) {
 
     try {
         for (int size : sizes) {
+            if (size % num_procs != 0) {
+                if (rank == 0) cout << "Error: Cant devide matrix size: " << size << " by number of processes: " << num_procs << endl;
+                MPI_Finalize();
+                return -1;
+            }
+
             Matrix<double> A, B, C;
 
             if (rank == 0) {
@@ -80,14 +86,18 @@ int main(int argc, char** argv) {
                 B = Matrix<double>(size);
             }
 
-            //Broadcast B matrix
-            MPI_Bcast(B.get_data(), size * size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
-
             //Allocate memory for local A and C matrices
             int rows_for_proc = size / num_procs;
             int local_matrix_size = rows_for_proc * size;
             vector<double> local_A(local_matrix_size);
             vector<double> local_C(local_matrix_size);
+
+            //Sync - start
+            MPI_Barrier(MPI_COMM_WORLD);
+            double start_time = MPI_Wtime();
+
+            //Broadcast B matrix
+            MPI_Bcast(B.get_data(), size * size, MPI_DOUBLE, 0, MPI_COMM_WORLD);
 
             //Scatter A matrix
             double* send_ptr_A = nullptr;
@@ -97,10 +107,6 @@ int main(int argc, char** argv) {
             MPI_Scatter(send_ptr_A, local_matrix_size, MPI_DOUBLE, //From
                 local_A.data(), local_matrix_size, MPI_DOUBLE, //To
                 0, MPI_COMM_WORLD);
-
-            //Sync
-            MPI_Barrier(MPI_COMM_WORLD);
-            double start_time = MPI_Wtime();
 
             //Multiple local matrices
             for (int i = 0; i < rows_for_proc; ++i) {
@@ -113,25 +119,25 @@ int main(int argc, char** argv) {
                 }
             }
 
-            //Sync
-            MPI_Barrier(MPI_COMM_WORLD);
-            double end_time = MPI_Wtime();
-
             //Gather C matrix
             double* recv_ptr_C = nullptr;
             if (rank == 0) {
                 recv_ptr_C = C.get_data();
             }
-            MPI_Gather(local_C.data(), local_matrix_size, MPI_DOUBLE,
-                recv_ptr_C, local_matrix_size, MPI_DOUBLE,
+            MPI_Gather(local_C.data(), local_matrix_size, MPI_DOUBLE, //From
+                recv_ptr_C, local_matrix_size, MPI_DOUBLE, //To
                 0, MPI_COMM_WORLD);
+
+            //Sync - end
+            MPI_Barrier(MPI_COMM_WORLD);
+            double end_time = MPI_Wtime();
 
             //Display results
             if (rank == 0) {
                 double elapsed_sec = end_time - start_time;
-                cout << "Size: " << size << " Procs: " << num_procs << " Time: " << elapsed_sec << " s" << endl;
+                cout << "Multiplied! Size: " << size << " Procs: " << num_procs << " Time: " << elapsed_sec << "s" << endl;
                 
-                if (size == 1200 && num_procs == 2) {
+                if (size == 1200 && num_procs == 4) {
                     cout << "Saving sample for verifing, size: 1200*1200 for 4 processes." << endl;
                     write_matrix("InputA.txt", A);
                     write_matrix("InputB.txt", B);
