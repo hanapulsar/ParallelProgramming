@@ -1,5 +1,5 @@
-#ifndef MATRIX_H
-#define MATRIX_H
+#ifndef MATRIX_CUH
+#define MATRIX_CUH
 
 #include <iostream>
 #include <stdexcept>
@@ -171,7 +171,7 @@ Matrix<T> Matrix<T>::multiply_cuda(const Matrix& src, int block_size) const {
 	dim3 blocksPerGrid((n + block_size - 1) / block_size, (n + block_size - 1) / block_size);
 
 	//Multiply
-	KernelMultiplication << <blocksPerGrid, threadsPerBlock >> > (A, B, C, n);
+	KernelMultiplication<T> << <blocksPerGrid, threadsPerBlock >> > (A, B, C, n);
 
 	//Sync
 	cudaDeviceSynchronize();
