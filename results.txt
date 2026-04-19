@@ -1,0 +1,45 @@
+Generating random matrices. Size: 200x200
+
+  Block Size: 8x8 - GPU Time: 0.001247 s
+  Block Size: 16x16 - GPU Time: 0.00103 s
+  Block Size: 32x32 - GPU Time: 0.0010516 s
+
+Generating random matrices. Size: 400x400
+
+  Block Size: 8x8 - GPU Time: 0.0044939 s
+  Block Size: 16x16 - GPU Time: 0.0043337 s
+  Block Size: 32x32 - GPU Time: 0.0042898 s
+
+Generating random matrices. Size: 800x800
+
+  Block Size: 8x8 - GPU Time: 0.0174198 s
+  Block Size: 16x16 - GPU Time: 0.0174296 s
+  Block Size: 32x32 - GPU Time: 0.0173443 s
+
+Generating random matrices. Size: 1200x1200
+
+  Block Size: 8x8 - GPU Time: 0.0498331 s
+  Block Size: 16x16 - GPU Time: 0.047508 s
+  Block Size: 32x32 - GPU Time: 0.0468406 s
+
+Generating random matrices. Size: 1600x1600
+
+  Block Size: 8x8 - GPU Time: 0.106605 s
+  Block Size: 16x16 - GPU Time: 0.0992479 s
+  Block Size: 32x32 - GPU Time: 0.0977137 s
+
+Generating random matrices. Size: 2000x2000
+
+  Block Size: 8x8 - GPU Time: 0.194404 s
+  Block Size: 16x16 - GPU Time: 0.177629 s
+  Block Size: 32x32 - GPU Time: 0.180115 s
+
+Generating random matrices. Size: 10000x10000
+
+  Block Size: 8x8 - GPU Time: 22.6527 s
+  Block Size: 16x16 - GPU Time: 16.9523 s
+  Block Size: 32x32 - GPU Time: 17.063 s
+
+Saving sample for verifing, size: 1200*1200 for 16*16 block.
+
+Finished.
