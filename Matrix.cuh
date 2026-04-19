@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <stdexcept>
-#include <omp.h>
+#include <cuda_runtime.h>
 
 template <typename T>
 class Matrix {
@@ -22,7 +22,7 @@ public:
 	const T& operator()(size_t row, size_t column) const;
 
 	Matrix operator*(const Matrix& src) const;
-	Matrix multiply_omp(const Matrix& src, int num_threads) const;
+	Matrix multiply_cuda(const Matrix& src, int block_size) const;
 
 	size_t get_size() const;
 };
@@ -128,30 +128,61 @@ Matrix<T> Matrix<T>::operator*(const Matrix& src) const {
 	return result;
 }
 
-//Parallel multiplication
+//Kernel multiply
 template <typename T>
-Matrix<T> Matrix<T>::multiply_omp(const Matrix& src, int num_threads) const {
+__global__ void KernelMultiplication(const T* A, const T* B, T* C, int N) {
+	int row = blockIdx.y * blockDim.y + threadIdx.y;
+	int col = blockIdx.x * blockDim.x + threadIdx.x;
+
+	if (row < N && col < N) {
+		T sum = 0;
+		for (int k = 0; k < N; ++k) {
+			sum += A[row * N + k] * B[k * N + col];
+		}
+		C[row * N + col] = sum;
+	}
+}
+
+//Multiplication operator - CUDA
+template <typename T>
+Matrix<T> Matrix<T>::multiply_cuda(const Matrix& src, int block_size) const {
 	if (size != src.size) {
 		throw std::invalid_argument("Matrix dimensions different.");
 	}
 
 	Matrix<T> result(size);
-
-	omp_set_num_threads(num_threads);
-
-	// error C3016: 'i': index variable in OpenMP 'for' statement must have signed integral type
 	int n = static_cast<int>(size);
+	//Memory needed
+	size_t bytes = n * n * sizeof(T);
 
-	#pragma omp parallel for
-	for (int i = 0; i < n; ++i) {
-		for (size_t j = 0; j < size; ++j) {
-			T sum = 0;
-			for (size_t k = 0; k < size; ++k) {
-				sum += (*this)(i, k) * src(k, j);
-			}
-			result(i, j) = sum;
-		}
-	}
+	T* A, * B, * C;
+	
+	//Allocate memory
+	cudaMalloc(&A, bytes);
+	cudaMalloc(&B, bytes);
+	cudaMalloc(&C, bytes);
+
+	//Matrix copy
+	cudaMemcpy(A, data, bytes, cudaMemcpyHostToDevice);
+	cudaMemcpy(B, src.data, bytes, cudaMemcpyHostToDevice);
+
+	//Grid and blocks
+	dim3 threadsPerBlock(block_size, block_size);
+	dim3 blocksPerGrid((n + block_size - 1) / block_size, (n + block_size - 1) / block_size);
+
+	//Multiply
+	KernelMultiplication << <blocksPerGrid, threadsPerBlock >> > (A, B, C, n);
+
+	//Sync
+	cudaDeviceSynchronize();
+
+	//Copy result
+	cudaMemcpy(result.data, C, bytes, cudaMemcpyDeviceToHost);
+
+	//Free memory
+	cudaFree(A);
+	cudaFree(B);
+	cudaFree(C);
 
 	return result;
 }
