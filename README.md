@@ -5,4 +5,4 @@
 * [2 Л/р - OpenMP](https://github.com/hanapulsar/ParallelProgramming/tree/LAB_2)
 * [3 Л/р - MPI](https://github.com/hanapulsar/ParallelProgramming/tree/LAB_3)
 * [4 Л/р - CUDA](https://github.com/hanapulsar/ParallelProgramming/tree/LAB_4)
-* [4 Л/р - MPI кластер](https://github.com/hanapulsar/ParallelProgramming/tree/LAB_5)
+* [5 Л/р - MPI кластер](https://github.com/hanapulsar/ParallelProgramming/tree/LAB_5)
